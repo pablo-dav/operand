@@ -1,6 +1,6 @@
 // import AuthRepository from "./auth-repository";
 import * as yup from "yup";
-import { sendEmail } from "../../providers/nodemailer";
+import { sendEmail } from "../../utils/nodemailer";
 import { AuthenticationError, BadRequestError, NotFoundError, UnprocessableEntityError } from "../../helpers/error";
 import {
    UserLoginPayload,
@@ -12,19 +12,21 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../..";
 import admin from "firebase-admin";
-import { readFileSync } from "fs"; // Import `fs` to read the service account key file
+import { readFileSync } from "fs";
+import jwt from "jsonwebtoken";
 
 // Load the service account key
 const serviceAccount = JSON.parse(readFileSync("./operand-90456-firebase-adminsdk-n3mtn-80f533b613.json", "utf8"));
 
 export default class AuthService {
-   //  private readonly authRepository: AuthRepository;
-
    constructor() {
       admin.initializeApp({
          credential: admin.credential.cert(serviceAccount),
       });
-      // this.authRepository = new AuthRepository();
+   }
+
+   private _generateAuthToken(email: string, expiresIn: string = "24h") {
+      return jwt.sign({ payload: email }, process.env.jwtSecret as string, { expiresIn });
    }
 
    saveUserData = async (uid: string, data: { name: string; role: string }) => {
@@ -42,7 +44,10 @@ export default class AuthService {
       const auth = getAuth();
       const response = await signInWithEmailAndPassword(auth, validatedData.email, validatedData.password);
 
+      // ! ALternativa via firebase
       const token = await admin.auth().createCustomToken(response.user.uid);
+      // ! ALternativa via jwt
+      // const token = this._generateAuthToken(response.user.uid)
 
       if (!response.user) throw new AuthenticationError("Usuário inválido!");
 
@@ -61,10 +66,14 @@ export default class AuthService {
       // if (isRegistered) throw new AuthenticationError("Usuário inválido!");
 
       const auth = getAuth();
-
+      // ! ALternativa via firebase
       const response = await createUserWithEmailAndPassword(auth, validatedData.email, validatedData.password);
 
       await this.saveUserData(response.user.uid, { name: validatedData.name, role: validatedData.role });
+
+      // ! ALternativa via jwt
+      // const token = this._generateAuthToken(response.user.uid)
+      // return { user: response.user, token };
 
       return { user: response.user };
    }
