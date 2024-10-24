@@ -1,6 +1,6 @@
 <template>
     <div>
-        <main>
+        <form @submit.prevent="submitLogin">
             <section class="absolute w-full h-full">
                 <div class="absolute top-0 w-full h-full bg-gray-900"
                     style="background-size: 100%; background-repeat: no-repeat;">
@@ -17,20 +17,22 @@
                                     <form>
                                         <div class="relative w-full mb-3">
                                             <label class="block uppercase text-gray-700 text-xs font-bold mb-2"
-                                                for="grid-password">Email</label><input type="email"
+                                                for="grid-password">Email</label>
+                                            <input type="email" id="email" v-model="email"
                                                 class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                                                 placeholder="Email" style="transition: all 0.15s ease 0s;" />
                                         </div>
                                         <div class="relative w-full mb-3">
                                             <label class="block uppercase text-gray-700 text-xs font-bold mb-2"
-                                                for="grid-password">Senha</label><input type="password"
+                                                for="grid-password">Senha</label>
+                                            <input type="password" id="password" v-model="password"
                                                 class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                                                 placeholder="Senha" style="transition: all 0.15s ease 0s;" />
                                         </div>
                                         <div class="text-center mt-6">
                                             <button
                                                 class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                                                type="button" style="transition: all 0.15s ease 0s;">
+                                                type="submit" style="transition: all 0.15s ease 0s;">
                                                 Entrar
                                             </button>
                                         </div>
@@ -49,12 +51,23 @@
                     </div>
                 </div>
             </section>
-        </main>
+        </form>
     </div>
 </template>
-<script>
 
-export default {
-    name: "login-page",
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useAuthStore } from '~/stores/auth'
+
+const email = ref<string>('')
+const password = ref<string>('')
+
+const authStore = useAuthStore()
+
+const submitLogin = () => {
+    authStore.login({
+        email: email.value,
+        password: password.value
+    })
 }
 </script>
