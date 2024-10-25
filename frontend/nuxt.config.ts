@@ -5,11 +5,21 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_API_BASE_URL,
+      baseUrl: process.env.NUXT_API_BASE_URL,
     },
   },
 
+  // imports: {
+  //   dirs: ["stores"],
+  //   presets: [
+  //     {
+  //       from: "pinia",
+  //       imports: ["storeToRefs"],
+  //     },
+  //   ],
+  // },
+
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
-  plugins: ["~/plugins/pinia.ts"],
+  // plugins: ["~/plugins/pinia.ts"],
 });

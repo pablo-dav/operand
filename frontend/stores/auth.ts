@@ -30,7 +30,7 @@ export const useAuthStore = defineStore("auth", {
           success: boolean;
           user: User;
           token: string;
-        }>("/api/v1/login", {
+        }>(`${useNuxtApp().$config.public.baseUrl}/auth/login`, {
           method: "POST",
           body: credentials,
         });
@@ -40,8 +40,7 @@ export const useAuthStore = defineStore("auth", {
 
         localStorage.setItem("token", response.token);
 
-        const router = useRouter();
-        router.push("/");
+        useNuxtApp().$router.push("/");
       } catch (error: any) {
         console.error(error.response.message);
       }
@@ -56,10 +55,26 @@ export const useAuthStore = defineStore("auth", {
       router.push("/login");
     },
 
-    checkAuth() {
+    async checkAuth() {
       const token = localStorage.getItem("token");
-      if (token) {
-        this.token = token;
+      try {
+        const response = await $fetch<{
+          success: boolean;
+          user: User;
+        }>(`${useNuxtApp().$config.public.baseUrl}/auth/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.success) {
+          this.user = response.user;
+        }
+
+        return response.success;
+      } catch (error: any) {
+        console.error(error.response.message);
       }
     },
   },
