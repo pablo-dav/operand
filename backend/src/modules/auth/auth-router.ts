@@ -30,25 +30,4 @@ export default class AuthRouter implements AppRouter {
       });
       return this;
    }
-
-   // public forgotPassword() {
-   //    this.router.post("/forgot-password", (request: Request, response: Response) => {
-   //       this.controller.forgotPassword(request, response);
-   //    });
-   //    return this;
-   // }
-
-   // public updatePassword() {
-   //    this.router.patch("/update-password", (request: Request, response: Response) => {
-   //       this.controller.updatePassword(request, response);
-   //    });
-   //    return this;
-   // }
-
-   // public resetPassword() {
-   //    this.router.patch("/reset-password", (request: Request, response: Response) => {
-   //       this.controller.resetPassword(request, response);
-   //    });
-   //    return this;
-   // }
 }

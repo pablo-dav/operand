@@ -38,34 +38,4 @@ export default class AuthController {
          return onError(response, error);
       }
    }
-
-   // public async forgotPassword(request: Request, response: Response) {
-   //    try {
-   //       const message = await this.service.forgotPassword(request.body);
-
-   //       return onSuccess(response, 200, { message });
-   //    } catch (error: any) {
-   //       return onError(response, error);
-   //    }
-   // }
-
-   // public async updatePassword(request: Request, response: Response) {
-   //    try {
-   //       const message = await this.service.updatePassword(request.body);
-
-   //       return onSuccess(response, 200, { message });
-   //    } catch (error: any) {
-   //       return onError(response, error);
-   //    }
-   // }
-
-   // public async resetPassword(request: Request, response: Response) {
-   //    try {
-   //       const message = await this.service.resetPassword(request.body);
-
-   //       return onSuccess(response, 200, { message });
-   //    } catch (error: any) {
-   //       return onError(response, error);
-   //    }
-   // }
 }
