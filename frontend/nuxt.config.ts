@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
@@ -8,17 +7,7 @@ export default defineNuxtConfig({
       baseUrl: process.env.NUXT_API_BASE_URL,
     },
   },
-
-  // imports: {
-  //   dirs: ["stores"],
-  //   presets: [
-  //     {
-  //       from: "pinia",
-  //       imports: ["storeToRefs"],
-  //     },
-  //   ],
-  // },
-
+  css: ["@/assets/css/globals.css", "@/assets/css/main.css"],
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
   // plugins: ["~/plugins/pinia.ts"],
