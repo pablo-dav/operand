@@ -10,6 +10,7 @@ interface Credentials {
 
 interface User {
   name: string;
+  email: string;
 }
 
 interface AuthState {
@@ -42,7 +43,7 @@ export const useAuthStore = defineStore("auth", {
 
         useNuxtApp().$router.push("/");
       } catch (error: any) {
-        console.error(error.response.message);
+        console.error(error.data.message);
       }
     },
 
@@ -74,7 +75,7 @@ export const useAuthStore = defineStore("auth", {
 
         return response.success;
       } catch (error: any) {
-        console.error(error.response.message);
+        console.error(error.data.message || "Erro");
       }
     },
   },
