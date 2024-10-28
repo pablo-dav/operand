@@ -43,5 +43,5 @@ npm run build
 ### Link para documentação da API
 
 ```
-baseUrl/api/v1/docs
+{{baseUrl}}/api/v1/docs
 ```
