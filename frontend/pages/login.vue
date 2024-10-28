@@ -11,7 +11,7 @@
                             class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 border-0">
                             <div class="flex-auto px-4 lg:px-10 py-5 pt-0">
                                 <div class="text-gray-500 text-center my-3 font-bold">
-                                    <h1 class="text-2xl">Login</h1>
+                                    <h1 class="text-2xl">Log In</h1>
                                 </div>
                                 <form @submit.prevent="submitLogin">
                                     <div class="relative w-full mb-3">
@@ -23,7 +23,7 @@
                                     </div>
                                     <div class="relative w-full mb-3">
                                         <label class="block uppercase text-gray-700 text-xs font-bold mb-2"
-                                            for="grid-password">Senha</label>
+                                            for="grid-password">Password</label>
                                         <input type="password" id="password" v-model="credentials.password"
                                             class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                                             placeholder="Senha" style="transition: all 0.15s ease 0s;" />
@@ -32,14 +32,14 @@
                                         <button
                                             class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
                                             type="submit" style="transition: all 0.15s ease 0s;">
-                                            Entrar
+                                            Log In
                                         </button>
                                     </div>
                                 </form>
                                 <div class="w-100 text-end">
-                                    <a href="/register" class="block underline  text-gray-700 text-sm font-bold">Create
-                                        new
-                                        account</a>
+                                    <a href="/register" class="block underline  text-gray-700 text-sm font-bold">
+                                        Create new account
+                                    </a>
                                 </div>
                             </div>
 
