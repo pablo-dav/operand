@@ -18,19 +18,36 @@ import {
 import { TaskSavePayload, TaskUpdatePayload } from "./task-interfaces";
 import { db } from "../..";
 import moment from "moment";
+import {
+   Get,
+   Post,
+   Patch,
+   Delete,
+   Route,
+   Tags,
+   Queries,
+   Query,
+   Body,
+   SuccessResponse,
+   Security,
+   FormField,
+   UploadedFiles,
+} from "tsoa";
 
-// Load the service account key
-
+@Route("task")
+@Security("jwt")
+@Tags("Task")
 export default class TaskService {
    constructor() {}
 
+   @Get("")
    async fetchAll() {
       const tasksRef = collection(db, "tasks");
       const tasksDocs = await getDocs(tasksRef);
 
       if (tasksDocs && tasksDocs.size == 0) throw new NotFoundError("Nenhuma task foi encontrada!");
 
-      let tasks: Array<Object> = [];
+      let tasks: Array<{}> = [];
       tasksDocs.forEach((task) => {
          tasks.push({ uid: task.id, ...task.data() });
       });
@@ -38,6 +55,7 @@ export default class TaskService {
       return { tasks };
    }
 
+   @Get("{taskId}")
    async fetchById(taskId: string) {
       const taskRef = doc(db, "tasks", taskId);
       const task = await getDoc(taskRef);
@@ -45,7 +63,8 @@ export default class TaskService {
       return { task: { uid: taskId, ...task.data() } };
    }
 
-   async search(payload: SearchPayload) {
+   @Post("search")
+   async search(@Body() payload: SearchPayload) {
       const taskRef = collection(db, "tasks");
 
       const page = payload.pagination?.page ? payload.pagination.page - 1 : 0;
@@ -63,7 +82,7 @@ export default class TaskService {
 
       if (tasksDocs && tasksDocs.size == 0) throw new NotFoundError("Nenhuma tarefa foi encontrada!");
 
-      let tasks: Array<Object> = [];
+      let tasks: Array<{}> = [];
       tasksDocs.forEach((task) => {
          tasks.push({ uid: task.id, ...task.data() });
       });
@@ -71,7 +90,8 @@ export default class TaskService {
       return { tasks };
    }
 
-   async store(payload: TaskSavePayload) {
+   @Post("")
+   async store(@Body() payload: TaskSavePayload) {
       const tasksRef = collection(db, "tasks");
       const createdAt = moment.now();
       const updatedAt = moment.now();
@@ -80,7 +100,8 @@ export default class TaskService {
       return { message: "Task criada com sucesso" };
    }
 
-   async update(taskId: string, payload: TaskUpdatePayload) {
+   @Patch("{taskId}")
+   async update(taskId: string, @Body() payload: TaskUpdatePayload) {
       const taskRef = doc(db, "tasks", taskId);
       const updatedAt = moment.now();
 
@@ -89,6 +110,7 @@ export default class TaskService {
       return { message: "Task atualizada com sucesso" };
    }
 
+   @Delete("{taskId}")
    async destroy(taskId: string) {
       const taskRef = doc(db, "tasks", taskId);
 

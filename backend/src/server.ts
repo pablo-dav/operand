@@ -4,6 +4,7 @@ import morgan from "morgan";
 import AuthModule from "./modules/auth/auth-module";
 import TaskModule from "./modules/task/task-module";
 import { verifyToken } from "./middlewares/verifyToken";
+import DocsModule from "./modules/docs/docs-module";
 // import router from './routes';
 
 export class SetupApplication {
@@ -27,6 +28,7 @@ export class SetupApplication {
    private setupRoutes(): void {
       this.router.use(`/${this.context}/${this.version}/auth`, new AuthModule("auth").router.router);
       this.router.use(`/${this.context}/${this.version}/task`, verifyToken, new TaskModule("task").router.router);
+      this.router.use(`/${this.context}/${this.version}/docs`, new DocsModule("docs").router.router);
       this.app.use(this.router);
    }
 

@@ -4,17 +4,13 @@ import { onError } from "../helpers/response";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import jwt from "jsonwebtoken";
 import admin from "firebase-admin";
-import { readFileSync } from "fs";
-const serviceAccount = JSON.parse(readFileSync("./operand-90456-firebase-adminsdk-n3mtn-80f533b613.json", "utf8"));
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "..";
 
 // const userRepository: AuthRepository = new AuthRepository();
 
 export async function verifyToken(request: any, response: Response, next: NextFunction) {
    try {
-      // admin.initializeApp({
-      //    credential: admin.credential.cert(serviceAccount),
-      // });
-
       const auth = getAuth();
       const token = request.headers.authorization?.replace("Bearer ", "");
       const response = await signInWithCustomToken(auth, token);
@@ -26,7 +22,10 @@ export async function verifyToken(request: any, response: Response, next: NextFu
 
       if (!response.user) throw new AuthenticationError("Usuário inválido!");
 
-      request.user = response.user;
+      const userRef = doc(db, "users", response.user.uid);
+      const user = await getDoc(userRef);
+
+      request.user = { ...response.user.providerData[0], ...user.data() };
 
       next();
    } catch (error: any) {

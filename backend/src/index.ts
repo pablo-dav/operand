@@ -4,7 +4,6 @@ import { initializeApp } from "firebase/app";
 import dotenv from "dotenv";
 dotenv.config();
 import { getFirestore } from "firebase/firestore";
-import { getMessaging } from "firebase/messaging";
 
 class Server {
    static start(): void {
