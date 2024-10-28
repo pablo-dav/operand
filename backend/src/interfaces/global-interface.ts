@@ -1,5 +1,5 @@
 export interface SearchPayload {
-   search: { by: string; value: string };
+   search: string;
    order?: { by: string; direction: "asc" | "desc" };
    pagination?: { page: number; limit: number };
 }

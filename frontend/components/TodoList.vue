@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import { showAlert } from '~/plugins/sweetalert2.client';
 import { useTaskStore, type Task } from '~/stores/task'
 
 const tasks = ref<Task[]>([])
@@ -29,15 +30,22 @@ onMounted(async () => {
     await handleListTasks()
 });
 
-const handleListTasks = async () => {
+const handleListTasks = async (taskFilter?: string) => {
     isLoading.value = true;
-    try {
-        const response = await taskStore.getAll();
-        tasks.value = response.tasks;
-    } catch (error) {
-    } finally {
-        isLoading.value = false;
+    let response = null
+    if (!taskFilter || taskFilter == "") {
+        response = await taskStore.getAll();
+    } else {
+        response = await taskStore.search(taskFilter);
+        if (response.success) {
+            tasks.value = response.tasks;
+        } else {
+            showAlert(response.message, "error", false)
+            response.tasks = [];
+        }
     }
+    tasks.value = response.tasks;
+    isLoading.value = false;
 }
 
 const filterToDo = computed(() => {

@@ -67,23 +67,29 @@ export default class TaskService {
    async search(@Body() payload: SearchPayload) {
       const taskRef = collection(db, "tasks");
 
-      const page = payload.pagination?.page ? payload.pagination.page - 1 : 0;
-      const pageLimit = payload.pagination?.limit ? payload.pagination.limit : 10;
+      // const page = payload.pagination?.page ? payload.pagination.page - 1 : 0;
+      // const pageLimit = payload.pagination?.limit ? payload.pagination.limit : 10;
 
-      const tasksQuery = query(
+      const tasksStatusQuery = query(
          taskRef,
-         where(payload.search.by, "==", payload.search.value),
-         orderBy(payload.order?.by || "priority", payload.order?.direction || "asc"),
-         startAt(page * pageLimit),
-         limit(pageLimit)
+         where("status", "==", payload.search)
+         // orderBy(payload.order?.by || "priority", payload.order?.direction || "asc"),
+         // startAt(page * pageLimit),
+         // limit(pageLimit)
       );
 
-      const tasksDocs = await getDocs(tasksQuery);
+      const tasksDueDateQuery = query(taskRef, where("dueDate", "==", moment(payload.search).format("YYYY-DD-MM")));
 
-      if (tasksDocs && tasksDocs.size == 0) throw new NotFoundError("Nenhuma tarefa foi encontrada!");
+      const tasksDocs = await Promise.all([getDocs(tasksStatusQuery), getDocs(tasksDueDateQuery)]);
+
+      if (tasksDocs && tasksDocs[0].size + tasksDocs[1].size == 0)
+         throw new NotFoundError("Nenhuma tarefa foi encontrada!");
 
       let tasks: Array<{}> = [];
-      tasksDocs.forEach((task) => {
+      tasksDocs[0].forEach((task) => {
+         tasks.push({ uid: task.id, ...task.data() });
+      });
+      tasksDocs[1].forEach((task) => {
          tasks.push({ uid: task.id, ...task.data() });
       });
 

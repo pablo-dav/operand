@@ -89,7 +89,7 @@ export const useTaskStore = defineStore("task", {
       }
     },
 
-    async search() {
+    async search(taskFilter: string) {
       try {
         const token = localStorage.getItem("token");
         const response = await $fetch<{ success: boolean; tasks: Task[] }>(
@@ -99,6 +99,7 @@ export const useTaskStore = defineStore("task", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            body: { search: taskFilter },
           }
         );
 

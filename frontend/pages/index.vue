@@ -2,11 +2,20 @@
     <main class="w-[100%] pt-[20px]">
         <div class="w-[calc(100%-40px)] mx-[auto]">
             <header class="flex justify-between items-center">
-                <button @click="isOpen = true"
-                    class="w-[100%] max-w-[190px] py-[10px] shadow-xl bg-[#3090a9] hover:bg-[#4CCFF1] transition-all duration-200 rounded-lg flex items-center justify-center gap-[10px]">
-                    <img src="@/assets/img/plus.svg" alt="Plus Icon">
-                    Create new Task
-                </button>
+                <div class="flex gap-3 max-w-[590px] ">
+                    <button @click="isOpen = true"
+                        class="w-[100%] max-w-[190px] py-[10px] shadow-xl bg-[#3090a9] hover:bg-[#4CCFF1] transition-all duration-200 rounded-lg flex items-center justify-center gap-[10px]">
+                        <img src="@/assets/img/plus.svg" alt="Plus Icon">
+                        Create new Task
+                    </button>
+                    <input type="text" placeholder="Search for a Task" v-model="taskFilter" id="filter"
+                        class="w-[90%] bg-[#2C3440] shadow-md py-[5px] px-[7px] rounded-md outline-none border-[1px] border-[#555C65] focus:shadow-[0px_0px_5px_black]">
+                    <button
+                        class="w-[10%] max-w-[290px] p-[10px] shadow-xl bg-[#181c23] hover:bg-[#111222] transition-all duration-200 rounded-lg flex items-center justify-center gap-[10px]"
+                        @click="listTasks">
+                        <img class="w-[130px]" src="@/assets/img/glass.svg" alt="Search Icon">
+                    </button>
+                </div>
 
                 <div class="w-[100%] max-w-[350px] px-[20px] py-[15px] flex items-center gap-[20px]">
                     <div class="">
@@ -103,13 +112,14 @@ const task = ref<TaskSavePayload>({
     dueDate: new Date(),
     status: ""
 })
-const handleListTasks = ref<{ handleListTasks: () => void } | null>(null);
+const handleListTasks = ref<{ handleListTasks: (taskFilter?: string) => void, handleFilterTasks: () => void } | null>(null);
 
 const authStore = useAuthStore()
 const taskStore = useTaskStore()
 
 const isOpen = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
+const taskFilter = ref<string>("")
 
 const handleCreateNewTask = async () => {
     isLoading.value = true
@@ -122,6 +132,10 @@ const handleCreateNewTask = async () => {
     } else {
         showAlert(response.message, "error")
     }
+}
+
+const listTasks = () => {
+    handleListTasks.value?.handleListTasks(taskFilter.value)
 }
 
 const showAlert = (title: string, icon: SwalIcon) => {
