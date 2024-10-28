@@ -9,7 +9,7 @@
                     <div class="w-full lg:w-4/12 px-4">
                         <div
                             class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 border-0">
-                            <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+                            <div class="flex-auto px-4 lg:px-10 py-5 pt-0">
                                 <div class="text-gray-500 text-center my-3 font-bold">
                                     <h1 class="text-2xl">Login</h1>
                                 </div>
@@ -17,14 +17,14 @@
                                     <div class="relative w-full mb-3">
                                         <label class="block uppercase text-gray-700 text-xs font-bold mb-2"
                                             for="grid-password">Email</label>
-                                        <input type="email" id="email" v-model="email"
+                                        <input type="email" id="email" v-model="credentials.email"
                                             class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                                             placeholder="Email" style="transition: all 0.15s ease 0s;" />
                                     </div>
                                     <div class="relative w-full mb-3">
                                         <label class="block uppercase text-gray-700 text-xs font-bold mb-2"
                                             for="grid-password">Senha</label>
-                                        <input type="password" id="password" v-model="password"
+                                        <input type="password" id="password" v-model="credentials.password"
                                             class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                                             placeholder="Senha" style="transition: all 0.15s ease 0s;" />
                                     </div>
@@ -36,15 +36,13 @@
                                         </button>
                                     </div>
                                 </form>
+                                <div class="w-100 text-end">
+                                    <a href="/register" class="block underline  text-gray-700 text-sm font-bold">Create
+                                        new
+                                        account</a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex flex-wrap mt-6">
-                            <div class="w-1/2">
-                                <a href="#pablo" class="text-gray-300"><small>Forgot password?</small></a>
-                            </div>
-                            <div class="w-1/2 text-right">
-                                <a href="#pablo" class="text-gray-300"><small>Create new account</small></a>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -54,20 +52,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore } from '~/stores/auth'
+import { useAuthStore, type Credentials } from '~/stores/auth'
+import loggedMiddleware from '~/middleware/logged.client'
 
-const email = ref<string>('')
-const password = ref<string>('')
+definePageMeta({
+    middleware: loggedMiddleware
+})
+
+const credentials = ref<Credentials>({
+    email: "",
+    password: "",
+})
 
 const authStore = useAuthStore()
 
-onActivated(() => { submitLogin() })
-
 const submitLogin = () => {
-    authStore.login({
-        email: email.value,
-        password: password.value
-    })
+    authStore.login(credentials.value)
 }
 </script>

@@ -1,46 +1,66 @@
 <template>
     <div class="flex flex-col gap-[60px] pb-[20px]">
-
-        <StatusTable title="To do" statusColor="bg-[#dc811a]" :tasks="filterList('to do')"
+        <StatusTable :isLoading title="To do" statusColor="bg-[#dc811a]" :tasks="filterToDo"
             @handleListTasks="handleListTasks" />
 
-        <StatusTable title="In Progress" statusColor="bg-[#3f75db]" :tasks="filterList('in progress')"
+        <StatusTable :isLoading title="In Progress" statusColor="bg-[#3f75db]" :tasks="filterInProgress"
             @handleListTasks="handleListTasks" />
 
-        <StatusTable title="Done" statusColor="bg-[#51bb51]" :tasks="filterList('done')"
+        <StatusTable :isLoading title="Done" statusColor="bg-[#51bb51]" :tasks="filterDone"
             @handleListTasks="handleListTasks" />
 
-        <StatusTable title="Blocked" statusColor="bg-[#c1c104]" :tasks="filterList('blocked')"
+        <StatusTable :isLoading title="Blocked" statusColor="bg-[#c1c104]" :tasks="filterBlocked"
             @handleListTasks="handleListTasks" />
 
-        <StatusTable title="BackLog" statusColor="bg-[#111222]" :tasks="filterBacklog()"
+        <StatusTable :isLoading title="BackLog" statusColor="bg-[#111222]" :tasks="filterBacklog"
             @handleListTasks="handleListTasks" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { useTaskStore } from '~/stores/task'
+import { useTaskStore, type Task } from '~/stores/task'
 
-const tasks = ref<{ uid: string, title: string, description: string, dueDate: Date, type: string, status: string }[]>([])
+const tasks = ref<Task[]>([])
+const isLoading = ref<boolean>(false)
 
 const taskStore = useTaskStore()
 
 onMounted(async () => {
-    handleListTasks();
+    await handleListTasks()
 });
 
-const response = await taskStore.getAll();
-tasks.value = response.tasks;
 const handleListTasks = async () => {
-    const response = await taskStore.getAll();
-    tasks.value = response.tasks;
+    isLoading.value = true;
+    try {
+        const response = await taskStore.getAll();
+        tasks.value = response.tasks;
+    } catch (error) {
+    } finally {
+        isLoading.value = false;
+    }
 }
 
-const filterList = (status: string) => {
-    return tasks.value.filter(task => task.status.toUpperCase() === status.toUpperCase())
-}
+const filterToDo = computed(() => {
+    return tasks.value.filter(task => task.status.toUpperCase() === "TO DO")
+})
 
-const filterBacklog = () => {
+const filterInProgress = computed(() => {
+    return tasks.value.filter(task => task.status.toUpperCase() === "IN PROGRESS")
+})
+
+const filterDone = computed(() => {
+    return tasks.value.filter(task => task.status.toUpperCase() === "DONE")
+})
+
+const filterBlocked = computed(() => {
+    return tasks.value.filter(task => task.status.toUpperCase() === "BLOCKED")
+})
+
+const filterBacklog = computed(() => {
     return tasks.value.filter(task => !["TO DO", "IN PROGRESS", "DONE", "BLOCKED"].includes(task.status.toUpperCase()))
-}
+})
+
+defineExpose({
+    handleListTasks
+});;
 </script>

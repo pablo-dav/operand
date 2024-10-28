@@ -1,16 +1,17 @@
 // stores/auth.ts
 import { defineStore } from "pinia";
-import { useRouter } from "vue-router";
 
 // Tipos para as credenciais de login e o usuário
-interface Credentials {
+export interface Credentials {
   email: string;
   password: string;
 }
 
-interface User {
-  name: string;
+export interface User {
   email: string;
+  name?: string;
+  password: string;
+  role?: string;
 }
 
 interface AuthState {
@@ -47,13 +48,35 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
+    async register(payload: User) {
+      try {
+        const response = await $fetch<{
+          success: boolean;
+          user: User;
+          token: string;
+        }>(`${useNuxtApp().$config.public.baseUrl}/auth/register`, {
+          method: "POST",
+          body: payload,
+        });
+
+        this.user = response.user;
+        this.token = response.token;
+
+        localStorage.setItem("token", response.token);
+
+        useNuxtApp().$router.push("/");
+      } catch (error: any) {
+        console.error(error.data.message);
+      }
+    },
+
     logout() {
+      const app = useNuxtApp();
       this.user = null;
       this.token = null;
       localStorage.removeItem("token");
 
-      const router = useRouter();
-      router.push("/login");
+      app.$router.push("/login");
     },
 
     async checkAuth() {
