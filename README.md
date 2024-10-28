@@ -5,8 +5,8 @@ Com funcionalidades de Pesquisa simples, CRUD de tasks e registro/login de usuá
 
 ## Requisição
 
-O projeto foi desenvolvido com essas tecnologias por atualiadade de ferramentas utlizando a facilidade Nuxt para roteamento, Typescript para maior consistência de código e tailwind por questões performáticas e gosto pessoal também. Utilizei o Pinia para fazer o gerenciamento de estado global/local das funcionalidades `tasks` e `autenticação`
-Já no desenvolvimento do backend com node.js foi utilizado uma arquitetura de modulos com repository pattern e express, com a premissa de ser simples e robusta.
+O projeto foi desenvolvido com essas tecnologias por atualiadade de ferramentas utlizando a facilidade Nuxt para roteamento, Typescript para maior consistência de código e tailwind por questões performáticas e gosto pessoal também. Utilizei o Pinia para fazer o gerenciamento de estado global/local das funcionalidades `tasks` e `autenticação` e também composition API do proprio vue por questões de estudo/preferência na utilidade tanto em reutilização de código e atualidade de ferramenta indicada pelo próprio vue.
+Já no desenvolvimento do backend com node.js foi utilizado uma arquitetura de modulos com repository pattern, express e typescript com a premissa de ser simples e robusta e consistente também.
 
 ## Setup do Projeto
 
@@ -38,4 +38,10 @@ npm run dev
 
 ```sh
 npm run build
+```
+
+### Link para documentação da API
+
+```
+baseUrl/api/v1/docs
 ```
