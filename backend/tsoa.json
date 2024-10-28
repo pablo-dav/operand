@@ -1,0 +1,26 @@
+{
+   "entryFile": "src/index.ts",
+   "noImplicitAdditionalProperties": "throw-on-extras",
+   "controllerPathGlobs": ["src/modules/**/*service.ts", "src/modules/**/*controller.ts"],
+   "spec": {
+      "outputDirectory": "dist",
+      "specVersion": 3,
+      "version": "1.0.0",
+      "host": "localhost:8000",
+      "schemes": ["http", "https"],
+      "basePath": "/api/v1",
+      "securityDefinitions": {
+         "jwt": {
+            "type": "http",
+            "scheme": "bearer",
+            "description": "Enter JWT",
+            "bearerFormat": "JWT"
+         }
+      }
+   },
+   "routes": {
+      "routesDir": "dist",
+      "basePath": "/api/v1",
+      "middleware": "express"
+   }
+}
